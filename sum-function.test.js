@@ -26,4 +26,14 @@ describe("Add function test-suite ", () => {
   test("should support custom delimiters", () => {
     expect(add("//;\n1;2")).toBe(3);
   });
+
+  test("should throw an exception for negative numbers", () => {
+    expect(() => add("1,-2")).toThrow("negative numbers not allowed: -2");
+  });
+
+  test("should throw an exception for multiple negative numbers", () => {
+    expect(() => add("1,-2, 4, -6")).toThrow(
+      "negative numbers not allowed: -2,-6"
+    );
+  });
 });
