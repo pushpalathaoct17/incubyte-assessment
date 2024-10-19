@@ -8,7 +8,11 @@ function add(numbers) {
       delimiter = new RegExp(parts[0][2]);
       numbers = parts[1];
     }
-    let digits = numbers.split(delimiter);
+    const digits = numbers.split(delimiter).map((num) => parseInt(num, 10));
+    const negatives = digits.filter((num) => num < 0);
+    if (negatives.length > 0) {
+      throw new Error(`negative numbers not allowed: ${negatives.join(",")}`);
+    }
     let sum = 0;
     for (let i = 0; i < digits.length; i++) {
       sum = sum + parseInt(digits[i]);
@@ -33,3 +37,5 @@ console.log(
 ); // output - 15
 
 console.log(" Handling different delimiters: :", add("//;\n1;2")); // output - 3
+
+console.log(" Handling negative numbers: :", add("2,5,1,-2,-3")); // output - negative numbers not allowed: -2,-3
