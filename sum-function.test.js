@@ -16,6 +16,14 @@ describe("Add function test-suite ", () => {
   });
 
   test("should return the sum of multiple numbers", () => {
+    expect(add("1,2,3,9,10")).toBe(25);
+  });
+
+  test("should return the sum of multiple numbers when it with delimiter", () => {
     expect(add("\n1,2,3,4\n6")).toBe(16);
+  });
+
+  test("should support custom delimiters", () => {
+    expect(add("//;\n1;2")).toBe(3);
   });
 });
