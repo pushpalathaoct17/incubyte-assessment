@@ -8,7 +8,10 @@ function add(numbers) {
       delimiter = new RegExp(parts[0][2]);
       numbers = parts[1];
     }
-    const digits = numbers.split(delimiter).map((num) => parseInt(num, 10));
+    const digits = numbers.split(delimiter).map((num) => {
+      const parsed = parseInt(num, 10);
+      return isNaN(parsed) ? 0 : parsed;
+    });
     const negatives = digits.filter((num) => num < 0);
     if (negatives.length > 0) {
       throw new Error(`negative numbers not allowed: ${negatives.join(",")}`);
