@@ -21,6 +21,9 @@ function add(numbers) {
   }
 }
 
+module.exports = add;
+
+/*
 console.log(" empty input :", add("")); // output - 0
 
 console.log(" single digit input :", add("1")); // output - 1
@@ -39,3 +42,5 @@ console.log(
 console.log(" Handling different delimiters: :", add("//;\n1;2")); // output - 3
 
 console.log(" Handling negative numbers: :", add("2,5,1,-2,-3")); // output - negative numbers not allowed: -2,-3
+
+*/
