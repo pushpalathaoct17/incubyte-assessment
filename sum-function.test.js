@@ -8,7 +8,8 @@ describe("Add function test-suite ", () => {
   });
 
   test("should return the number itself when a single number is passed", () => {
-    expect(add("1")).toBe(1);
+    expect(add("//[*][%]\n1*2%3")).toBe(6);
+    expect(add("1,\n")).toBe(1);
   });
 
   test("should return the sum of two numbers", () => {
@@ -25,6 +26,22 @@ describe("Add function test-suite ", () => {
 
   test("should support custom delimiters", () => {
     expect(add("//;\n1;2")).toBe(3);
+  });
+
+  test("should handle multiple single-character delimiters", () => {
+    expect(add("//[*][%]\n1*2%3")).toBe(6);
+  });
+
+  test("should handle multi-character delimiters", () => {
+    expect(add("//[***]\n1***2***3")).toBe(6);
+  });
+
+  test("should handle multiple multi-character delimiters", () => {
+    expect(add("//[***][%%%]\n1***2%%%3")).toBe(6);
+  });
+
+  test("should return 0 for empty input with multi-character delimiters", () => {
+    expect(add("//[***][%%%]\n")).toBe(0);
   });
 
   test("should throw an exception for negative numbers", () => {

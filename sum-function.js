@@ -1,49 +1,50 @@
 function add(numbers) {
-  if (!numbers || numbers === "") {
-    return 0;
+  if (!numbers || numbers.trim() === "") return 0;
+
+  // Default delimiters: newline or comma
+  let delimiter = /[\n,]/;
+  // Custom delimiter logic
+  if (numbers.startsWith("//")) {
+    // Split on first \n
+    const [delimiterPart, numPart] = numbers.split("\n", 2);
+    delimiter = extractDelimiters(delimiterPart);
+    // Only keep the number part after the delimiter
+    numbers = numPart;
+  }
+
+  const digits = numbers
+    .split(delimiter)
+    .map((num) => parseInt(num, 10))
+    // Filter out any non-numeric values (e.g., empty strings)
+    .filter((num) => !isNaN(num));
+
+  handleNegatives(digits);
+
+  return digits.reduce((sum, num) => sum + num, 0);
+}
+
+function extractDelimiters(delimiterPart) {
+  if (delimiterPart.startsWith("//[")) {
+    // Handle multiple or multi-character delimiters
+    const delimiters = delimiterPart
+      .match(/\[([^\]]+)\]/g)
+      .map((d) => d.slice(1, -1));
+    return new RegExp(delimiters.map(escapeRegExp).join("|"));
   } else {
-    let delimiter = /[\n,]/;
-    if (numbers.startsWith("//")) {
-      const parts = numbers.split("\n");
-      delimiter = new RegExp(parts[0][2]);
-      numbers = parts[1];
-    }
-    const digits = numbers.split(delimiter).map((num) => {
-      const parsed = parseInt(num, 10);
-      return isNaN(parsed) ? 0 : parsed;
-    });
-    const negatives = digits.filter((num) => num < 0);
-    if (negatives.length > 0) {
-      throw new Error(`negative numbers not allowed: ${negatives.join(",")}`);
-    }
-    let sum = 0;
-    for (let i = 0; i < digits.length; i++) {
-      sum = sum + parseInt(digits[i]);
-    }
-    return sum;
+    // Single character delimiter
+    return new RegExp(escapeRegExp(delimiterPart[2]));
   }
 }
 
+function handleNegatives(digits) {
+  const negatives = digits.filter((num) => num < 0);
+  if (negatives.length > 0) {
+    throw new Error(`negative numbers not allowed: ${negatives.join(",")}`);
+  }
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 module.exports = add;
-
-/*
-console.log(" empty input :", add("")); // output - 0
-
-console.log(" single digit input :", add("1")); // output - 1
-
-console.log(" mulitple digits with comma separated input :", add("1,5")); // output - 6
-
-console.log(" mulitple digits with comma separated input :", add("1,5, 1,6")); // output - 13
-
-console.log(" Handling new lines between numbers :", add("1\n2,3")); // output - 6
-
-console.log(
-  " Handling new lines between numbers with multple :",
-  add("1\n2,3\n4,5")
-); // output - 15
-
-console.log(" Handling different delimiters: :", add("//;\n1;2")); // output - 3
-
-console.log(" Handling negative numbers: :", add("2,5,1,-2,-3")); // output - negative numbers not allowed: -2,-3
-
-*/
